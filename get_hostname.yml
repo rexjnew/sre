@@ -1,0 +1,16 @@
+---
+- name: get host names
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: get hostname
+    shell: hostname && echo ${user_name}
+    register: log
+  - name: echo username from env
+    shell: ls
+    register: log2
+  - name: logs
+    debug: var=log
+  - name: logs
+    debug: var=log2
