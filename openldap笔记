@@ -1,2 +1,24 @@
-电子书openldap
+一、电子书openldap
 http://www.ddooo.com/softdown/111619.htm
+
+二、Fun with PAM scripts
+http://evertrue.github.io/blog/2016/02/03/fun-with-pam-scripts/
+
+# Our "Special Script"
+auth sufficient pam_exec.so expose_authtok debug log=/tmp/debug.log /usr/sbin/pam_verify
+
+#!/usr/bin/env bash
+
+# The password comes in through stdin
+PAM_PASSWORD=`cat -`
+echo "User: ${PAM_USER}; Password: ${PAM_PASSWORD}; Type: ${PAM_TYPE}"
+
+if [[ "${PAM_PASSWORD}" != "pw" ]]; then
+  echo "Incorrect password"
+  exit 1
+fi
+
+# We create an account if the home directory doesn't already exist
+if [[ "${PAM_TYPE}" == "open_session" ]] && [ ! -d "/home/${PAM_USER}" ]; then
+  useradd -m ${PAM_USER}
+fi
